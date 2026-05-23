@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Stethoscope, Menu, X, Phone } from 'lucide-react';
+import { Menu, X, Phone } from 'lucide-react';
 
 const navLinks = [
   { label: 'Home', href: '/' },
@@ -37,22 +38,24 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
-            <Link href="/" className="flex items-center space-x-3 group">
-              <div className="relative flex-shrink-0">
-                <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-teal-300/40 group-hover:shadow-teal-400/60 group-hover:scale-105 transition-all duration-300">
-                  <Stethoscope className="w-5 h-5 text-white" strokeWidth={2} />
-                </div>
-                <div className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-amber-400 rounded-full border-2 border-white animate-pulse" />
+            <Link href="/" className="flex items-center gap-3 group">
+              <div className="relative flex-shrink-0 group-hover:scale-105 transition-transform duration-300">
+                <Image
+                  src="/logo.png"
+                  alt="Anjum Dentist Logo"
+                  width={44}
+                  height={44}
+                  className="h-11 w-auto object-contain drop-shadow-sm"
+                  priority
+                />
               </div>
               <div className="flex flex-col">
-                <span
-                  className="text-xl font-extrabold tracking-tight text-slate-900"
-                >
+                <span className="text-xl font-extrabold tracking-[-0.02em] text-slate-900">
                   Anjum{' '}
-                  <span className="text-teal-500">Dentist</span>
+                  <span className="text-teal-600">Dentist</span>
                 </span>
                 <span className="text-[10px] font-semibold tracking-widest uppercase text-slate-400">
-                  Dental Clinic · Karachi
+                  Dental Clinic &middot; Karachi
                 </span>
               </div>
             </Link>
@@ -91,9 +94,10 @@ export default function Navbar() {
               </a>
               <a
                 href="#appointment"
-                className="px-5 py-2.5 bg-gradient-to-r from-teal-600 to-cyan-500 text-white text-sm font-bold rounded-xl shadow-lg shadow-teal-500/30 hover:shadow-teal-500/50 hover:-translate-y-0.5 transition-all duration-300 whitespace-nowrap"
+                className="group relative px-5 py-2.5 bg-teal-600 text-white text-sm font-bold rounded-xl shadow-lg shadow-teal-600/20 hover:bg-teal-700 hover:-translate-y-0.5 hover:shadow-teal-600/30 transition-all duration-300 ease-in-out whitespace-nowrap overflow-hidden"
               >
-                Book Appointment
+                <span className="relative z-10">Book Appointment</span>
+                <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out bg-gradient-to-r from-transparent via-white/15 to-transparent" />
               </a>
             </div>
 

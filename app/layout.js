@@ -6,17 +6,22 @@ const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-inter',
+  weight: ['300', '400', '500', '600', '700', '800', '900'],
 });
 
 export const metadata = {
-  title: 'Anjum Dentist | Premium Dental Care',
+  title: 'Anjum Dentist | World-Class Dental Care in Karachi',
   description:
-    'Experience premium, painless dental care with cutting-edge technology. From routine checkups to complete smile transformations — your comfort is our priority.',
+    'Painless, world-class dental care crafted with precision and artistry. From routine checkups to complete smile transformations — your comfort is our priority.',
   keywords:
     'dentist, dental care, teeth whitening, orthodontics, dental clinic, Karachi dentist, Anjum Dentist',
+  icons: {
+    icon: '/logo.png',
+    apple: '/logo.png',
+  },
   openGraph: {
-    title: 'Anjum Dentist | Premium Dental Care',
-    description: 'Your Smile Deserves the Best Care',
+    title: 'Anjum Dentist | World-Class Dental Care',
+    description: 'Your Smile, Our Craft.',
     type: 'website',
   },
 };
