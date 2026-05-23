@@ -1,3 +1,5 @@
+'use client';
+
 import { Stethoscope, Sparkles, Smile, Shield, Star, Heart, Baby, Crown, Scissors, Activity } from 'lucide-react';
 
 const services = [
