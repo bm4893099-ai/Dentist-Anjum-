@@ -121,19 +121,22 @@ export default function TestimonialsSection() {
         </div>
 
         {/* Cards */}
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-3 gap-5">
           {cards.map((t, i) => (
             <div
               key={`${t.name}-${i}`}
-              className="card-premium p-6 flex flex-col relative overflow-hidden group"
+              className="group relative bg-white rounded-3xl p-6 flex flex-col border border-slate-100 hover:border-teal-100 hover:-translate-y-1.5 transition-all duration-300 ease-in-out overflow-hidden"
+              style={{ boxShadow: '0 2px 16px rgba(0,0,0,0.05)' }}
+              onMouseEnter={e => e.currentTarget.style.boxShadow = '0 16px 48px rgba(13,148,136,0.10), 0 4px 16px rgba(0,0,0,0.06)'}
+              onMouseLeave={e => e.currentTarget.style.boxShadow = '0 2px 16px rgba(0,0,0,0.05)'}
             >
               {/* Quote icon */}
-              <div className="absolute top-4 right-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                <Quote className="w-12 h-12 text-teal-600" />
+              <div className="absolute top-5 right-5 opacity-[0.07] group-hover:opacity-[0.12] transition-opacity duration-300">
+                <Quote className="w-14 h-14 text-teal-600" />
               </div>
 
               {/* Service tag */}
-              <div className={`inline-flex w-fit mb-4 px-3 py-1 rounded-full bg-gradient-to-r ${t.color} text-white text-xs font-bold`}>
+              <div className="inline-flex w-fit mb-4 px-3 py-1 rounded-full bg-teal-50 border border-teal-200 text-teal-700 text-xs font-bold">
                 {t.service}
               </div>
 
@@ -141,18 +144,18 @@ export default function TestimonialsSection() {
               <StarRating rating={t.rating} />
 
               {/* Text */}
-              <p className="text-slate-600 text-sm leading-relaxed mt-3 flex-1">
+              <p className="text-slate-600 text-sm leading-relaxed mt-3 flex-1 font-light">
                 &ldquo;{t.text}&rdquo;
               </p>
 
               {/* Author */}
               <div className="flex items-center gap-3 mt-5 pt-5 border-t border-slate-100">
-                <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${t.color} flex items-center justify-center flex-shrink-0 shadow-md`}>
+                <div className="w-11 h-11 rounded-2xl bg-teal-600 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform duration-300">
                   <span className="text-white font-bold text-sm">{t.initials}</span>
                 </div>
                 <div>
-                  <p className="text-slate-900 font-bold text-sm">{t.name}</p>
-                  <p className="text-slate-400 text-xs font-medium">{t.role}</p>
+                  <p className="text-slate-900 font-bold text-sm tracking-tight">{t.name}</p>
+                  <p className="text-slate-400 text-xs font-medium mt-0.5">{t.role}</p>
                 </div>
               </div>
             </div>

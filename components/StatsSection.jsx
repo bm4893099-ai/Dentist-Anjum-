@@ -51,24 +51,24 @@ function Counter({ target, suffix, decimal, duration = 2000 }) {
 
 export default function StatsSection() {
   return (
-    <section className="relative py-20 bg-white border-b border-slate-100 overflow-hidden">
-      {/* Subtle background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-teal-50/50 to-cyan-50/30" />
-
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+    <section className="py-20 bg-white border-y border-slate-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
           {stats.map(({ icon: Icon, value, suffix, label, color, decimal }) => (
             <div
               key={label}
-              className="group flex flex-col items-center text-center p-6 rounded-2xl bg-white border border-slate-100 shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300"
+              className="group flex flex-col items-center text-center p-6 lg:p-8 rounded-3xl bg-white border border-slate-100 hover:border-teal-100 hover:-translate-y-1.5 transition-all duration-300 ease-in-out cursor-default"
+              style={{ boxShadow: '0 2px 16px rgba(0,0,0,0.05), 0 1px 4px rgba(0,0,0,0.04)' }}
+              onMouseEnter={e => e.currentTarget.style.boxShadow = '0 12px 40px rgba(13,148,136,0.10), 0 4px 12px rgba(0,0,0,0.06)'}
+              onMouseLeave={e => e.currentTarget.style.boxShadow = '0 2px 16px rgba(0,0,0,0.05), 0 1px 4px rgba(0,0,0,0.04)'}
             >
-              <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br from-teal-50 to-cyan-50 border border-teal-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+              <div className="w-14 h-14 rounded-2xl bg-teal-50 border border-teal-100 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-teal-100 transition-all duration-300">
                 <Icon className={`w-7 h-7 ${color}`} strokeWidth={1.75} />
               </div>
-              <p className={`text-4xl font-black ${color} mb-1`}>
+              <p className={`text-4xl font-black ${color} mb-1 tracking-tight group-hover:scale-105 transition-transform duration-300`}>
                 <Counter target={value} suffix={suffix} decimal={decimal} />
               </p>
-              <p className="text-slate-500 text-sm font-semibold leading-tight">{label}</p>
+              <p className="text-slate-500 text-sm font-semibold leading-tight mt-1">{label}</p>
             </div>
           ))}
         </div>

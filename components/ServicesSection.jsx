@@ -106,38 +106,40 @@ export default function ServicesSection() {
         </div>
 
         {/* Services Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {services.map(({ icon: Icon, title, description, color, bg, border, tag }) => (
             <div
               key={title}
-              className={`group relative card-premium p-6 hover:scale-[1.02] cursor-pointer`}
+              className="group relative bg-white rounded-3xl p-6 border border-slate-100 hover:border-teal-100 hover:-translate-y-1.5 transition-all duration-300 ease-in-out cursor-pointer overflow-hidden"
+              style={{ boxShadow: '0 2px 16px rgba(0,0,0,0.05)' }}
+              onMouseEnter={e => e.currentTarget.style.boxShadow = '0 16px 48px rgba(13,148,136,0.10), 0 4px 16px rgba(0,0,0,0.06)'}
+              onMouseLeave={e => e.currentTarget.style.boxShadow = '0 2px 16px rgba(0,0,0,0.05)'}
             >
               {/* Tag */}
               {tag && (
                 <div className="absolute top-4 right-4">
-                  <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-gradient-to-r ${color} text-white shadow-sm`}>
+                  <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-teal-50 border border-teal-200 text-teal-700">
                     {tag}
                   </span>
                 </div>
               )}
 
               {/* Icon */}
-              <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${bg} border ${border} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300`}>
-                <div className={`w-7 h-7 bg-gradient-to-br ${color} rounded-xl flex items-center justify-center`}>
-                  <Icon className="w-4 h-4 text-white" strokeWidth={2} />
-                </div>
+              <div className={`w-14 h-14 rounded-2xl ${bg} border ${border} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300`}>
+                <Icon className="w-6 h-6 text-slate-600 group-hover:text-teal-600 transition-colors duration-300" strokeWidth={2} />
               </div>
 
               {/* Content */}
-              <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-teal-700 transition-colors duration-200">
+              <h3 className="text-base font-bold text-slate-900 mb-2 tracking-tight group-hover:text-teal-700 transition-colors duration-200">
                 {title}
               </h3>
               <p className="text-slate-500 text-sm leading-relaxed">{description}</p>
 
-              {/* Bottom accent */}
-              <div
-                className={`absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r ${color} rounded-b-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
-              />
+              {/* Shimmer on hover */}
+              <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out bg-gradient-to-r from-transparent via-teal-50/60 to-transparent pointer-events-none" />
+
+              {/* Bottom accent line */}
+              <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-teal-500 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-in-out rounded-b-3xl" />
             </div>
           ))}
         </div>

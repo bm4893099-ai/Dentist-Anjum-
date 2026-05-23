@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { CheckCircle, Heart, Zap, Users, Clock, Shield } from 'lucide-react';
 
 const whyUs = [
@@ -21,39 +22,44 @@ export default function AboutSection() {
       <div className="container-max">
         {/* Top: About + Why Us */}
         <div className="grid lg:grid-cols-2 gap-16 items-center mb-24">
-          {/* Left visual */}
+          {/* Left visual — light premium card */}
           <div className="relative">
-            <div className="relative rounded-3xl overflow-hidden shadow-2xl shadow-teal-100">
-              <div className="aspect-[4/3] bg-gradient-to-br from-teal-700 via-teal-600 to-cyan-600 flex items-center justify-center">
-                <div className="text-center px-8">
-                  <div className="w-24 h-24 rounded-3xl bg-white/20 border border-white/30 flex items-center justify-center mx-auto mb-6 backdrop-blur-sm">
-                    <svg viewBox="0 0 80 80" className="w-12 h-12 text-white" fill="currentColor">
-                      <path d="M40 4C26 4,8 16,8 32C8 48,20 52,24 64C28 76,30.5 80,35 80C39.5 80,40 68,40 68C40 68,40.5 80,45 80C49.5 80,52 76,56 64C60 52,72 48,72 32C72 16,54 4,40 4Z" />
-                    </svg>
-                  </div>
-                  <h3 className="text-2xl font-black text-white mb-2">Anjum Dentist</h3>
-                  <p className="text-teal-100 text-sm font-medium">Est. 2009 · Karachi, Pakistan</p>
+            <div
+              className="relative rounded-3xl overflow-hidden border border-slate-100"
+              style={{ boxShadow: '0 24px 64px -12px rgba(0,0,0,0.10), 0 8px 24px -4px rgba(0,0,0,0.06)' }}
+            >
+              {/* Top: teal brand band */}
+              <div className="bg-teal-600 px-8 py-10 text-center relative overflow-hidden">
+                <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-teal-500/30" />
+                <div className="absolute -bottom-6 -left-6 w-24 h-24 rounded-full bg-teal-700/30" />
+                <div className="relative inline-block mb-4 hover:scale-105 transition-transform duration-300">
+                  <Image src="/logo.png" alt="Anjum Dentist" width={88} height={88} className="w-22 h-22 object-contain drop-shadow-lg" />
+                </div>
+                <h3 className="text-white font-black text-2xl tracking-tight">Anjum Dentist</h3>
+                <p className="text-teal-200 text-sm font-medium mt-1">Est. 2009 · Clifton, Karachi</p>
+              </div>
 
-                  <div className="grid grid-cols-3 gap-4 mt-8">
-                    {[['5K+', 'Patients'], ['15+', 'Years'], ['98%', 'Satisfaction']].map(([val, lbl]) => (
-                      <div key={lbl} className="bg-white/15 rounded-2xl py-3 px-2 border border-white/20">
-                        <p className="text-white font-black text-xl">{val}</p>
-                        <p className="text-teal-100 text-xs font-medium">{lbl}</p>
-                      </div>
-                    ))}
-                  </div>
+              {/* Bottom: clean white stats */}
+              <div className="bg-white px-6 py-6">
+                <div className="grid grid-cols-3 divide-x divide-slate-100">
+                  {[['5,000+', 'Patients'], ['15+', 'Years'], ['98%', 'Satisfaction']].map(([val, lbl]) => (
+                    <div key={lbl} className="text-center px-4 py-2 group cursor-default">
+                      <p className="text-teal-600 font-black text-2xl tracking-tight group-hover:scale-105 transition-transform duration-300">{val}</p>
+                      <p className="text-slate-400 text-xs font-semibold mt-0.5">{lbl}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
 
             {/* Floating badge */}
-            <div className="absolute -bottom-6 -right-6 bg-amber-400 rounded-2xl px-5 py-4 shadow-xl shadow-amber-200/50">
-              <p className="text-amber-900 font-black text-2xl leading-none">15+</p>
+            <div className="absolute -bottom-5 -right-5 bg-amber-400 rounded-2xl px-5 py-4 shadow-xl shadow-amber-200/60 hover:scale-105 transition-transform duration-300 cursor-default">
+              <p className="text-amber-900 font-black text-2xl leading-none tracking-tight">15+</p>
               <p className="text-amber-800 text-xs font-bold mt-0.5">Years of Excellence</p>
             </div>
 
             {/* Decorative ring */}
-            <div className="absolute -top-6 -left-6 w-24 h-24 rounded-full border-4 border-teal-200 opacity-60" />
+            <div className="absolute -top-6 -left-6 w-24 h-24 rounded-full border-4 border-teal-100/80 -z-10" />
           </div>
 
           {/* Right content */}
