@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Settings from '@/lib/models/Settings';
 
+export const dynamic = 'force-dynamic';
+
 const DEFAULT_SETTINGS = {
   phone: '+92 300 1234567',
   email: 'info@anjumdentist.com',
