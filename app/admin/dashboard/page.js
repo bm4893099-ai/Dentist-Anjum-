@@ -226,6 +226,8 @@ function SettingsTab() {
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [logoPreview, setLogoPreview] = useState(null);
+  const [logoUploading, setLogoUploading] = useState(false);
 
   useEffect(() => {
     fetch('/api/settings')
@@ -238,6 +240,35 @@ function SettingsTab() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setSettings((p) => ({ ...p, [name]: value }));
+  };
+
+  const handleLogoChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => setLogoPreview(ev.target.result);
+    reader.readAsDataURL(file);
+  };
+
+  const handleLogoUpload = async () => {
+    if (!logoPreview) return;
+    setLogoUploading(true);
+    try {
+      const res = await fetch('/api/settings/logo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ base64: logoPreview }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast.success('Logo updated! Reload the website to see changes.');
+        setLogoPreview(null);
+      } else throw new Error(data.error);
+    } catch (err) {
+      toast.error(err.message || 'Logo upload failed.');
+    } finally {
+      setLogoUploading(false);
+    }
   };
 
   const handleSave = async (e) => {
@@ -318,12 +349,49 @@ function SettingsTab() {
         </p>
       </div>
 
+      {/* ── LOGO UPLOAD ── */}
+      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm mb-8">
+        <div className="flex items-center gap-2.5 mb-5">
+          <div className="w-8 h-8 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center">
+            <Image src="/logo.png" alt="logo" width={20} height={20} className="w-5 h-5 object-contain" />
+          </div>
+          <h3 className="text-slate-900 font-bold">Clinic Logo</h3>
+        </div>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
+          <div className="w-20 h-20 rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 flex items-center justify-center overflow-hidden flex-shrink-0">
+            {logoPreview
+              ? <img src={logoPreview} alt="preview" className="w-full h-full object-contain p-1" />
+              : <img src="/logo.png" alt="current" className="w-full h-full object-contain p-2" />}
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-slate-700 mb-1">Upload new logo</p>
+            <p className="text-xs text-slate-400 mb-3">PNG or JPG recommended. Will replace logo on the website and admin panel.</p>
+            <div className="flex items-center gap-3">
+              <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-all">
+                Choose File
+                <input type="file" accept="image/*" onChange={handleLogoChange} className="hidden" />
+              </label>
+              {logoPreview && (
+                <button
+                  type="button"
+                  onClick={handleLogoUpload}
+                  disabled={logoUploading}
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-teal-800 hover:bg-teal-900 text-white text-xs font-bold rounded-xl transition-all disabled:opacity-60"
+                >
+                  {logoUploading ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Uploading...</> : <><Save className="w-3.5 h-3.5" /> Save Logo</>}
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="space-y-8">
         {fieldGroups.map(({ title, icon: GroupIcon, fields }) => (
           <div key={title} className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
             <div className="flex items-center gap-2.5 mb-5">
               <div className="w-8 h-8 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center">
-                <GroupIcon className="w-4 h-4 text-teal-600" />
+                <GroupIcon className="w-4 h-4 text-teal-800" />
               </div>
               <h3 className="text-slate-900 font-bold">{title}</h3>
             </div>
@@ -338,7 +406,7 @@ function SettingsTab() {
                     value={settings[name] || ''}
                     onChange={handleChange}
                     placeholder={placeholder}
-                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all duration-200 text-sm"
+                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-800/15 focus:border-teal-800 transition-all duration-200 text-sm"
                   />
                 </div>
               ))}
@@ -351,7 +419,7 @@ function SettingsTab() {
         <button
           type="submit"
           disabled={saving}
-          className="flex items-center gap-2.5 px-8 py-4 bg-gradient-to-r from-teal-600 to-cyan-500 text-white font-bold rounded-2xl shadow-lg shadow-teal-500/25 hover:shadow-teal-500/40 hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+          className="flex items-center gap-2.5 px-8 py-4 bg-teal-800 hover:bg-teal-900 text-white font-bold rounded-2xl shadow-lg shadow-teal-900/20 hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
         >
           {saving ? (
             <><Loader2 className="w-4 h-4 animate-spin" /> Saving Changes...</>

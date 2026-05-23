@@ -16,7 +16,7 @@
   }
 
   ::selection {
-    @apply bg-teal-500/30 text-teal-900;
+    @apply bg-teal-800/20 text-teal-900;
   }
 
   ::-webkit-scrollbar {
@@ -28,17 +28,17 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-teal-500 rounded-full;
+    @apply bg-teal-800 rounded-full;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-teal-600;
+    @apply bg-teal-900;
   }
 }
 
 @layer utilities {
   .text-gradient-teal {
-    @apply bg-gradient-to-r from-teal-500 via-cyan-400 to-teal-400 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-teal-800 via-teal-700 to-teal-600 bg-clip-text text-transparent;
   }
 
   .text-gradient-gold {
@@ -77,22 +77,22 @@
   }
 
   .btn-primary {
-    @apply relative inline-flex items-center justify-center gap-2 px-6 py-3 bg-teal-600 text-white font-semibold rounded-xl overflow-hidden;
-    box-shadow: 0 4px 16px rgba(13,148,136,0.20);
+    @apply relative inline-flex items-center justify-center gap-2 px-6 py-3 bg-teal-800 text-white font-semibold rounded-xl overflow-hidden;
+    box-shadow: 0 4px 16px rgba(17,94,89,0.25);
     transition: all 0.3s ease-in-out;
   }
 
   .btn-primary:hover {
-    @apply bg-teal-700 -translate-y-0.5;
-    box-shadow: 0 8px 24px rgba(13,148,136,0.30);
+    @apply bg-teal-900 -translate-y-0.5;
+    box-shadow: 0 8px 24px rgba(17,94,89,0.35);
   }
 
   .btn-outline {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3 border-2 border-teal-600 text-teal-700 font-semibold rounded-xl hover:bg-teal-50 transition-all duration-300;
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 border-2 border-teal-800 text-teal-800 font-semibold rounded-xl hover:bg-teal-50 transition-all duration-300;
   }
 
   .input-field {
-    @apply w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500 transition-all duration-200;
+    @apply w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-800/20 focus:border-teal-800 transition-all duration-200;
   }
 
   .label-field {

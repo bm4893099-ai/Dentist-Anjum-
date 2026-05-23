@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Calendar, Clock, User, Mail, Phone, Stethoscope, FileText, Send, CheckCircle, Loader2 } from 'lucide-react';
+import { CheckCircle, Loader2, ArrowRight } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const SERVICE_OPTIONS = [
@@ -23,30 +23,16 @@ const TIME_SLOTS = [
 ];
 
 const INITIAL_FORM = {
-  fullName: '',
-  email: '',
-  phone: '',
-  preferredDate: '',
-  preferredTime: '',
-  serviceType: '',
-  notes: '',
+  fullName: '', email: '', phone: '',
+  preferredDate: '', preferredTime: '', serviceType: '', notes: '',
 };
 
-function InputGroup({ label, icon: Icon, error, children }) {
+function Field({ label, error, children, span2 }) {
   return (
-    <div>
-      <label className="label-field">
-        <span className="flex items-center gap-1.5">
-          <Icon className="w-3.5 h-3.5 text-teal-500" />
-          {label}
-        </span>
-      </label>
+    <div className={span2 ? 'sm:col-span-2' : ''}>
+      <label className="block text-xs font-bold text-slate-400 uppercase tracking-[0.1em] mb-2">{label}</label>
       {children}
-      {error && (
-        <p className="mt-1.5 text-xs text-red-500 font-medium flex items-center gap-1">
-          <span>✕</span> {error}
-        </p>
-      )}
+      {error && <p className="mt-1.5 text-xs text-red-500 font-medium">{error}</p>}
     </div>
   );
 }
@@ -56,231 +42,170 @@ export default function AppointmentForm() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-
   const today = new Date().toISOString().split('T')[0];
 
   const validate = () => {
     const e = {};
-    if (!form.fullName.trim() || form.fullName.trim().length < 2)
-      e.fullName = 'Full name must be at least 2 characters.';
-    if (!form.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
-      e.email = 'Please enter a valid email address.';
-    if (!form.phone.trim() || form.phone.trim().length < 7)
-      e.phone = 'Please enter a valid phone number.';
-    if (!form.preferredDate) e.preferredDate = 'Please select a preferred date.';
-    if (!form.preferredTime) e.preferredTime = 'Please select a preferred time.';
-    if (!form.serviceType) e.serviceType = 'Please select a service type.';
+    if (!form.fullName.trim() || form.fullName.trim().length < 2) e.fullName = 'At least 2 characters required.';
+    if (!form.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = 'Valid email required.';
+    if (!form.phone.trim() || form.phone.trim().length < 7) e.phone = 'Valid phone number required.';
+    if (!form.preferredDate) e.preferredDate = 'Please select a date.';
+    if (!form.preferredTime) e.preferredTime = 'Please select a time.';
+    if (!form.serviceType) e.serviceType = 'Please select a service.';
     return e;
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: '' }));
+    setForm((p) => ({ ...p, [name]: value }));
+    if (errors[name]) setErrors((p) => ({ ...p, [name]: '' }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      toast.error('Please fix the highlighted errors before submitting.');
-      return;
-    }
-
+    const errs = validate();
+    if (Object.keys(errs).length > 0) { setErrors(errs); toast.error('Please complete all required fields.'); return; }
     setLoading(true);
     try {
       const res = await fetch('/api/appointments', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form),
       });
       const data = await res.json();
-
-      if (!res.ok || !data.success) {
-        throw new Error(data.error || 'Something went wrong. Please try again.');
-      }
-
+      if (!res.ok || !data.success) throw new Error(data.error || 'Something went wrong.');
       setSubmitted(true);
       setForm(INITIAL_FORM);
-      toast.success('Appointment booked! We will confirm within 2 hours.');
     } catch (err) {
-      toast.error(err.message || 'Failed to book appointment. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+      toast.error(err.message || 'Failed to book. Please try again.');
+    } finally { setLoading(false); }
   };
 
   if (submitted) {
     return (
-      <section id="appointment" className="section-padding bg-teal-50">
-        <div className="container-max flex flex-col items-center justify-center text-center min-h-[400px]">
-          <div className="w-24 h-24 rounded-full bg-teal-100 border-2 border-teal-200 flex items-center justify-center mb-6">
-            <CheckCircle className="w-12 h-12 text-teal-600" />
+      <section id="appointment" className="py-32 bg-white">
+        <div className="max-w-md mx-auto px-6 text-center">
+          <div className="w-16 h-16 rounded-full bg-teal-50 border border-teal-100 flex items-center justify-center mx-auto mb-7">
+            <CheckCircle className="w-8 h-8 text-teal-800" strokeWidth={1.5} />
           </div>
-          <h3 className="text-3xl font-black text-slate-900 mb-3">Appointment Booked!</h3>
-          <p className="text-slate-500 text-lg mb-2">
-            Thank you! Your appointment request has been submitted successfully.
+          <h3 className="text-2xl font-black text-slate-900 mb-3 tracking-tight">Booking Confirmed</h3>
+          <p className="text-slate-500 text-base leading-relaxed mb-8">
+            Your request has been submitted. Our team will call you within <strong className="text-slate-700">2 hours</strong> to confirm your slot.
           </p>
-          <p className="text-teal-600 font-semibold mb-8">
-            Our team will call you within 2 hours to confirm your slot.
-          </p>
-          <button
-            onClick={() => setSubmitted(false)}
-            className="btn-primary"
-          >
-            Book Another Appointment
+          <button onClick={() => setSubmitted(false)} className="inline-flex items-center gap-2 px-6 py-3 bg-teal-800 hover:bg-teal-900 text-white text-sm font-bold rounded-xl transition-all">
+            Book Another <ArrowRight className="w-4 h-4" />
           </button>
         </div>
       </section>
     );
   }
 
+  const inputCls = (field) =>
+    `w-full px-4 py-3.5 rounded-xl border bg-white text-slate-900 text-sm placeholder-slate-300 focus:outline-none focus:ring-2 transition-all duration-200 ${
+      errors[field]
+        ? 'border-red-300 focus:ring-red-200 focus:border-red-400'
+        : 'border-slate-200 focus:ring-teal-800/10 focus:border-teal-800'
+    }`;
+
   return (
-    <section id="appointment" className="section-padding bg-slate-50 border-y border-slate-100">
-      <div className="container-max">
-        {/* Header */}
-        <div className="text-center max-w-2xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 bg-teal-50 border border-teal-200 rounded-full px-4 py-1.5 mb-5">
-            <Calendar className="w-3.5 h-3.5 text-teal-600" />
-            <span className="text-teal-700 text-xs font-bold tracking-wide uppercase">Book Appointment</span>
-          </div>
-          <h2 className="text-4xl lg:text-5xl font-black text-slate-900 mb-4 leading-tight">
-            Schedule Your{' '}
-            <span className="text-gradient-teal">Free Consultation</span>
+    <section id="appointment" className="py-28 bg-white border-t border-slate-100">
+      <div className="max-w-2xl mx-auto px-6">
+
+        {/* Minimal header */}
+        <div className="mb-14">
+          <p className="text-teal-800 text-[11px] font-bold uppercase tracking-[0.2em] mb-4">Book Appointment</p>
+          <h2 className="text-4xl lg:text-5xl font-black text-slate-900 leading-[1.05] tracking-tight mb-5">
+            Schedule your<br />free consultation.
           </h2>
-          <p className="text-slate-500 text-lg">
-            Fill out the form below and our team will confirm your slot within 2 hours.
-          </p>
+          <p className="text-slate-400 text-base">We confirm your slot within 2 hours.</p>
         </div>
 
-        {/* Form Card */}
-        <div className="max-w-3xl mx-auto">
-          <div className="bg-white border border-slate-100 rounded-3xl p-8 lg:p-10 shadow-2xl shadow-slate-200/60">
-            <form onSubmit={handleSubmit} noValidate>
-              <div className="grid sm:grid-cols-2 gap-5">
-                {/* Full Name */}
-                <InputGroup label="Full Name" icon={User} error={errors.fullName}>
-                  <input
-                    type="text"
-                    name="fullName"
-                    value={form.fullName}
-                    onChange={handleChange}
-                    placeholder="e.g. Ayesha Khan"
-                    className={`input-field ${
-                      errors.fullName ? 'border-red-400 focus:border-red-400' : ''
-                    }`}
-                  />
-                </InputGroup>
+        <form onSubmit={handleSubmit} noValidate>
 
-                {/* Email */}
-                <InputGroup label="Email Address" icon={Mail} error={errors.email}>
-                  <input
-                    type="email"
-                    name="email"
-                    value={form.email}
-                    onChange={handleChange}
-                    placeholder="you@example.com"
-                    className={`input-field ${errors.email ? 'border-red-400' : ''}`}
-                  />
-                </InputGroup>
-
-                {/* Phone */}
-                <InputGroup label="Phone Number" icon={Phone} error={errors.phone}>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={form.phone}
-                    onChange={handleChange}
-                    placeholder="+92 300 0000000"
-                    className={`input-field ${errors.phone ? 'border-red-400' : ''}`}
-                  />
-                </InputGroup>
-
-                {/* Service Type */}
-                <InputGroup label="Service Type" icon={Stethoscope} error={errors.serviceType}>
-                  <select
-                    name="serviceType"
-                    value={form.serviceType}
-                    onChange={handleChange}
-                    className={`input-field ${errors.serviceType ? 'border-red-400' : ''}`}
-                  >
-                    <option value="" disabled>Select a service...</option>
-                    {SERVICE_OPTIONS.map((s) => (
-                      <option key={s} value={s}>{s}</option>
-                    ))}
-                  </select>
-                </InputGroup>
-
-                {/* Preferred Date */}
-                <InputGroup label="Preferred Date" icon={Calendar} error={errors.preferredDate}>
-                  <input
-                    type="date"
-                    name="preferredDate"
-                    value={form.preferredDate}
-                    onChange={handleChange}
-                    min={today}
-                    className={`input-field ${errors.preferredDate ? 'border-red-400' : ''}`}
-                  />
-                </InputGroup>
-
-                {/* Preferred Time */}
-                <InputGroup label="Preferred Time Slot" icon={Clock} error={errors.preferredTime}>
-                  <select
-                    name="preferredTime"
-                    value={form.preferredTime}
-                    onChange={handleChange}
-                    className={`input-field ${errors.preferredTime ? 'border-red-400' : ''}`}
-                  >
-                    <option value="" disabled>Choose a time slot...</option>
-                    {TIME_SLOTS.map((t) => (
-                      <option key={t} value={t}>{t}</option>
-                    ))}
-                  </select>
-                </InputGroup>
-
-                {/* Notes — full width */}
-                <div className="sm:col-span-2">
-                  <InputGroup label="Additional Notes (Optional)" icon={FileText} error={errors.notes}>
-                    <textarea
-                      name="notes"
-                      value={form.notes}
-                      onChange={handleChange}
-                      rows={3}
-                      placeholder="Tell us about any specific concerns, dental history, or questions..."
-                      className="input-field resize-none"
-                    />
-                  </InputGroup>
-                </div>
-              </div>
-
-              {/* Submit */}
-              <div className="mt-8">
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="group w-full flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-teal-500 to-cyan-400 text-white font-bold text-base rounded-2xl shadow-xl shadow-teal-500/25 hover:shadow-teal-500/40 hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 className="w-5 h-5 animate-spin" />
-                      Booking your appointment...
-                    </>
-                  ) : (
-                    <>
-                      <Send className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
-                      Confirm Appointment Booking
-                    </>
-                  )}
-                </button>
-
-                <p className="text-slate-400 text-xs text-center mt-4">
-                  By submitting, you agree to be contacted by our clinic team. We respect your privacy.
-                </p>
-              </div>
-            </form>
+          {/* Step 1 */}
+          <div className="mb-10">
+            <div className="flex items-center gap-3 mb-6">
+              <span className="w-6 h-6 rounded-full bg-teal-800 text-white text-[11px] font-black flex items-center justify-center flex-shrink-0">1</span>
+              <p className="text-slate-900 font-bold text-sm tracking-tight">Personal Details</p>
+              <div className="flex-1 h-px bg-slate-100" />
+            </div>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <Field label="Full Name" error={errors.fullName}>
+                <input type="text" name="fullName" value={form.fullName} onChange={handleChange} placeholder="Ayesha Khan" className={inputCls('fullName')} />
+              </Field>
+              <Field label="Phone Number" error={errors.phone}>
+                <input type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="+92 300 0000000" className={inputCls('phone')} />
+              </Field>
+              <Field label="Email Address" error={errors.email} span2>
+                <input type="email" name="email" value={form.email} onChange={handleChange} placeholder="you@example.com" className={inputCls('email')} />
+              </Field>
+            </div>
           </div>
-        </div>
+
+          {/* Step 2 */}
+          <div className="mb-10">
+            <div className="flex items-center gap-3 mb-6">
+              <span className="w-6 h-6 rounded-full bg-teal-800 text-white text-[11px] font-black flex items-center justify-center flex-shrink-0">2</span>
+              <p className="text-slate-900 font-bold text-sm tracking-tight">Service & Schedule</p>
+              <div className="flex-1 h-px bg-slate-100" />
+            </div>
+            <div className="grid sm:grid-cols-2 gap-4 mb-5">
+              <Field label="Service Type" error={errors.serviceType} span2>
+                <select name="serviceType" value={form.serviceType} onChange={handleChange} className={inputCls('serviceType')}>
+                  <option value="" disabled>Select a service...</option>
+                  {SERVICE_OPTIONS.map((s) => <option key={s} value={s}>{s}</option>)}
+                </select>
+              </Field>
+              <Field label="Preferred Date" error={errors.preferredDate}>
+                <input type="date" name="preferredDate" value={form.preferredDate} onChange={handleChange} min={today} className={inputCls('preferredDate')} />
+              </Field>
+            </div>
+            {/* Time pills */}
+            <Field label="Preferred Time" error={errors.preferredTime}>
+              <div className="flex flex-wrap gap-2 mt-1">
+                {TIME_SLOTS.map((t) => (
+                  <button
+                    key={t} type="button"
+                    onClick={() => { setForm((p) => ({ ...p, preferredTime: t })); if (errors.preferredTime) setErrors((p) => ({ ...p, preferredTime: '' })); }}
+                    className={`px-3.5 py-2 rounded-xl text-xs font-bold border transition-all duration-150 ${
+                      form.preferredTime === t
+                        ? 'bg-teal-800 border-teal-800 text-white shadow-sm'
+                        : 'bg-white border-slate-200 text-slate-600 hover:border-teal-800 hover:text-teal-800'
+                    }`}
+                  >{t}</button>
+                ))}
+              </div>
+            </Field>
+          </div>
+
+          {/* Step 3 */}
+          <div className="mb-10">
+            <div className="flex items-center gap-3 mb-6">
+              <span className="w-6 h-6 rounded-full bg-slate-200 text-slate-500 text-[11px] font-black flex items-center justify-center flex-shrink-0">3</span>
+              <p className="text-slate-900 font-bold text-sm tracking-tight">Additional Notes <span className="text-slate-400 font-normal">(optional)</span></p>
+              <div className="flex-1 h-px bg-slate-100" />
+            </div>
+            <textarea
+              name="notes" value={form.notes} onChange={handleChange} rows={3}
+              placeholder="Any specific concerns, dental history, or questions..."
+              className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-white text-slate-900 text-sm placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-800/10 focus:border-teal-800 transition-all resize-none"
+            />
+          </div>
+
+          {/* Submit */}
+          <button
+            type="submit" disabled={loading}
+            className="relative w-full flex items-center justify-center gap-2.5 py-4 bg-teal-800 hover:bg-teal-900 text-white font-bold text-sm rounded-2xl shadow-lg shadow-teal-900/20 hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0 overflow-hidden group"
+          >
+            <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/8 to-transparent pointer-events-none" />
+            {loading
+              ? <><Loader2 className="w-4 h-4 animate-spin" /> Booking your appointment...</>
+              : <><ArrowRight className="w-4 h-4" /> Confirm Appointment Booking</>
+            }
+          </button>
+
+          <p className="text-slate-400 text-xs text-center mt-4">
+            We respect your privacy. Your details are used only to confirm your booking.
+          </p>
+        </form>
       </div>
     </section>
   );
