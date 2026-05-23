@@ -1,0 +1,148 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Stethoscope, Menu, X, Phone } from 'lucide-react';
+
+const navLinks = [
+  { label: 'Home', href: '/' },
+  { label: 'Services', href: '/services' },
+  { label: 'About', href: '/about' },
+  { label: 'Contact', href: '/contact' },
+];
+
+export default function Navbar() {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 24);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    setIsMobileOpen(false);
+  }, [pathname]);
+
+  return (
+    <>
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white/95 backdrop-blur-xl border-b border-slate-100 ${
+          isScrolled ? 'shadow-md shadow-slate-200/60' : ''
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-20">
+            {/* Logo */}
+            <Link href="/" className="flex items-center space-x-3 group">
+              <div className="relative flex-shrink-0">
+                <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-teal-300/40 group-hover:shadow-teal-400/60 group-hover:scale-105 transition-all duration-300">
+                  <Stethoscope className="w-5 h-5 text-white" strokeWidth={2} />
+                </div>
+                <div className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-amber-400 rounded-full border-2 border-white animate-pulse" />
+              </div>
+              <div className="flex flex-col">
+                <span
+                  className="text-xl font-extrabold tracking-tight text-slate-900"
+                >
+                  Anjum{' '}
+                  <span className="text-teal-500">Dentist</span>
+                </span>
+                <span className="text-[10px] font-semibold tracking-widest uppercase text-slate-400">
+                  Dental Clinic · Karachi
+                </span>
+              </div>
+            </Link>
+
+            {/* Desktop Nav */}
+            <div className="hidden md:flex items-center space-x-1">
+              {navLinks.map(({ label, href }) => {
+                const isActive = pathname === href;
+                return (
+                  <Link
+                    key={label}
+                    href={href}
+                    className={`relative px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 group ${
+                      isActive ? 'text-teal-600' : 'text-slate-700 hover:text-teal-600'
+                    }`}
+                  >
+                    {label}
+                    <span
+                      className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-teal-500 rounded-full transition-all duration-300 ${
+                        isActive ? 'w-5' : 'w-0 group-hover:w-5'
+                      }`}
+                    />
+                  </Link>
+                );
+              })}
+            </div>
+
+            {/* Desktop CTA */}
+            <div className="hidden md:flex items-center space-x-3">
+              <a
+                href="tel:+923001234567"
+                className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-teal-600 transition-colors duration-200"
+              >
+                <Phone className="w-4 h-4" />
+                <span className="hidden lg:inline">+92 300 1234567</span>
+              </a>
+              <a
+                href="#appointment"
+                className="px-5 py-2.5 bg-gradient-to-r from-teal-600 to-cyan-500 text-white text-sm font-bold rounded-xl shadow-lg shadow-teal-500/30 hover:shadow-teal-500/50 hover:-translate-y-0.5 transition-all duration-300 whitespace-nowrap"
+              >
+                Book Appointment
+              </a>
+            </div>
+
+            {/* Mobile Toggle */}
+            <button
+              onClick={() => setIsMobileOpen(!isMobileOpen)}
+              aria-label="Toggle menu"
+              className="md:hidden p-2 rounded-xl text-slate-700 hover:bg-teal-50 transition-all duration-200"
+            >
+              {isMobileOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Menu */}
+        <div
+          className={`md:hidden transition-all duration-300 overflow-hidden ${
+            isMobileOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+          }`}
+        >
+          <div className="bg-white/96 backdrop-blur-xl border-t border-teal-100 px-4 pb-6 pt-3 space-y-1 shadow-xl">
+            {navLinks.map(({ label, href }) => (
+              <Link
+                key={label}
+                href={href}
+                className={`block px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${
+                  pathname === href
+                    ? 'bg-teal-50 text-teal-700'
+                    : 'text-slate-700 hover:bg-teal-50 hover:text-teal-700'
+                }`}
+              >
+                {label}
+              </Link>
+            ))}
+            <div className="pt-3 border-t border-slate-100">
+              <a
+                href="#appointment"
+                className="block w-full text-center px-6 py-3 bg-gradient-to-r from-teal-600 to-cyan-500 text-white font-bold rounded-xl shadow-lg"
+              >
+                Book Appointment
+              </a>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </>
+  );
+}
