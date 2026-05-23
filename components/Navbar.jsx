@@ -38,25 +38,16 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-3 group">
+            <Link href="/" className="flex items-center group" aria-label="Anjum Dentist Home">
               <div className="relative flex-shrink-0 group-hover:scale-105 transition-transform duration-300">
                 <Image
                   src="/logo.png"
                   alt="Anjum Dentist Logo"
-                  width={44}
-                  height={44}
-                  className="h-11 w-auto object-contain drop-shadow-sm"
+                  width={56}
+                  height={56}
+                  className="h-14 w-auto object-contain drop-shadow-sm"
                   priority
                 />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xl font-extrabold tracking-[-0.02em] text-slate-900">
-                  Anjum{' '}
-                  <span className="text-teal-600">Dentist</span>
-                </span>
-                <span className="text-[10px] font-semibold tracking-widest uppercase text-slate-400">
-                  Dental Clinic &middot; Karachi
-                </span>
               </div>
             </Link>
 
