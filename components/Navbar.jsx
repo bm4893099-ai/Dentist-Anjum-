@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, X, Phone } from 'lucide-react';
@@ -16,6 +15,7 @@ const navLinks = [
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [logoVersion, setLogoVersion] = useState(1);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -27,6 +27,13 @@ export default function Navbar() {
   useEffect(() => {
     setIsMobileOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    fetch('/api/settings')
+      .then(r => r.json())
+      .then(d => { if (d.success && d.data.logoVersion) setLogoVersion(d.data.logoVersion); })
+      .catch(() => {});
+  }, []);
 
   return (
     <>
@@ -40,13 +47,10 @@ export default function Navbar() {
             {/* Logo */}
             <Link href="/" className="flex items-center group" aria-label="Anjum Dentist Home">
               <div className="relative flex-shrink-0 group-hover:scale-105 transition-transform duration-300">
-                <Image
-                  src="/logo.png"
+                <img
+                  src={`/logo.png?v=${logoVersion}`}
                   alt="Anjum Dentist Logo"
-                  width={56}
-                  height={56}
                   className="h-14 w-auto object-contain drop-shadow-sm"
-                  priority
                 />
               </div>
             </Link>

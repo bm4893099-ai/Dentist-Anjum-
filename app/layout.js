@@ -16,8 +16,9 @@ export const metadata = {
   keywords:
     'dentist, dental care, teeth whitening, orthodontics, dental clinic, Karachi dentist, Anjum Dentist',
   icons: {
-    icon: '/logo.png',
-    apple: '/logo.png',
+    icon: '/favicon.png',
+    apple: '/favicon.png',
+    shortcut: '/favicon.png',
   },
   openGraph: {
     title: 'Anjum Dentist | World-Class Dental Care',

@@ -17,18 +17,18 @@ export async function POST(request) {
     const base64Data = base64.replace(/^data:image\/\w+;base64,/, '');
     const buffer = Buffer.from(base64Data, 'base64');
 
-    const logoPath = join(process.cwd(), 'public', 'logo.png');
-    await writeFile(logoPath, buffer);
+    const faviconPath = join(process.cwd(), 'public', 'favicon.png');
+    await writeFile(faviconPath, buffer);
 
     const newVersion = Date.now();
     await connectDB();
     await Settings.findOneAndUpdate(
       {},
-      { logoVersion: newVersion },
+      { faviconVersion: newVersion },
       { upsert: true, new: true }
     );
 
-    return NextResponse.json({ success: true, logoVersion: newVersion, message: 'Logo updated successfully!' });
+    return NextResponse.json({ success: true, faviconVersion: newVersion, message: 'Favicon updated successfully!' });
   } catch (error) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }

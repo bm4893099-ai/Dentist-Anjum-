@@ -233,11 +233,21 @@ function SettingsTab() {
   const [saving, setSaving] = useState(false);
   const [logoPreview, setLogoPreview] = useState(null);
   const [logoUploading, setLogoUploading] = useState(false);
+  const [logoVersion, setLogoVersion] = useState(Date.now());
+  const [faviconPreview, setFaviconPreview] = useState(null);
+  const [faviconUploading, setFaviconUploading] = useState(false);
+  const [faviconVersion, setFaviconVersion] = useState(Date.now());
 
   useEffect(() => {
     fetch('/api/settings')
       .then((r) => r.json())
-      .then((d) => { if (d.success) setSettings(d.data); })
+      .then((d) => {
+        if (d.success) {
+          setSettings(d.data);
+          if (d.data.logoVersion) setLogoVersion(d.data.logoVersion);
+          if (d.data.faviconVersion) setFaviconVersion(d.data.faviconVersion);
+        }
+      })
       .catch(() => toast.error('Failed to load settings.'))
       .finally(() => setLoading(false));
   }, []);
@@ -266,13 +276,44 @@ function SettingsTab() {
       });
       const data = await res.json();
       if (data.success) {
-        toast.success('Logo updated! Reload the website to see changes.');
+        setLogoVersion(data.logoVersion);
         setLogoPreview(null);
+        toast.success('Logo updated successfully!');
       } else throw new Error(data.error);
     } catch (err) {
       toast.error(err.message || 'Logo upload failed.');
     } finally {
       setLogoUploading(false);
+    }
+  };
+
+  const handleFaviconChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => setFaviconPreview(ev.target.result);
+    reader.readAsDataURL(file);
+  };
+
+  const handleFaviconUpload = async () => {
+    if (!faviconPreview) return;
+    setFaviconUploading(true);
+    try {
+      const res = await fetch('/api/settings/favicon', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ base64: faviconPreview }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setFaviconVersion(data.faviconVersion);
+        setFaviconPreview(null);
+        toast.success('Favicon updated successfully!');
+      } else throw new Error(data.error);
+    } catch (err) {
+      toast.error(err.message || 'Favicon upload failed.');
+    } finally {
+      setFaviconUploading(false);
     }
   };
 
@@ -355,22 +396,23 @@ function SettingsTab() {
       </div>
 
       {/* ── LOGO UPLOAD ── */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm mb-8">
+      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm mb-5">
         <div className="flex items-center gap-2.5 mb-5">
-          <div className="w-8 h-8 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center">
-            <Image src="/logo.png" alt="logo" width={20} height={20} className="w-5 h-5 object-contain" />
+          <div className="w-8 h-8 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center overflow-hidden">
+            <img src={`/logo.png?v=${logoVersion}`} alt="logo" className="w-5 h-5 object-contain" />
           </div>
           <h3 className="text-slate-900 font-bold">Clinic Logo</h3>
+          <span className="text-xs text-slate-400 bg-slate-100 px-2 py-0.5 rounded-lg">Appears on website &amp; admin panel</span>
         </div>
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
-          <div className="w-20 h-20 rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 flex items-center justify-center overflow-hidden flex-shrink-0">
+          <div className="w-24 h-24 rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 flex items-center justify-center overflow-hidden flex-shrink-0">
             {logoPreview
               ? <img src={logoPreview} alt="preview" className="w-full h-full object-contain p-1" />
-              : <img src="/logo.png" alt="current" className="w-full h-full object-contain p-2" />}
+              : <img src={`/logo.png?v=${logoVersion}`} alt="current" className="w-full h-full object-contain p-2" key={logoVersion} />}
           </div>
           <div className="flex-1">
             <p className="text-sm font-semibold text-slate-700 mb-1">Upload new logo</p>
-            <p className="text-xs text-slate-400 mb-3">PNG or JPG recommended. Will replace logo on the website and admin panel.</p>
+            <p className="text-xs text-slate-400 mb-3">PNG or JPG recommended. Replaces the logo on the website and admin panel instantly.</p>
             <div className="flex items-center gap-3">
               <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-all">
                 Choose File
@@ -384,6 +426,44 @@ function SettingsTab() {
                   className="inline-flex items-center gap-2 px-4 py-2.5 bg-teal-800 hover:bg-teal-900 text-white text-xs font-bold rounded-xl transition-all disabled:opacity-60"
                 >
                   {logoUploading ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Uploading...</> : <><Save className="w-3.5 h-3.5" /> Save Logo</>}
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── FAVICON UPLOAD ── */}
+      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm mb-8">
+        <div className="flex items-center gap-2.5 mb-5">
+          <div className="w-8 h-8 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center overflow-hidden">
+            <img src={`/favicon.png?v=${faviconVersion}`} alt="favicon" className="w-5 h-5 object-contain" onError={e => { e.target.style.display='none'; }} />
+          </div>
+          <h3 className="text-slate-900 font-bold">Favicon</h3>
+          <span className="text-xs text-slate-400 bg-slate-100 px-2 py-0.5 rounded-lg">Browser tab icon</span>
+        </div>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
+          <div className="w-16 h-16 rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 flex items-center justify-center overflow-hidden flex-shrink-0">
+            {faviconPreview
+              ? <img src={faviconPreview} alt="preview" className="w-full h-full object-contain p-1" />
+              : <img src={`/favicon.png?v=${faviconVersion}`} alt="current" className="w-full h-full object-contain p-1" key={faviconVersion} onError={e => { e.target.style.display='none'; }} />}
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-slate-700 mb-1">Upload favicon</p>
+            <p className="text-xs text-slate-400 mb-3">PNG or ICO recommended. Displays in browser tabs and bookmarks. Best size: 32×32 or 64×64 px.</p>
+            <div className="flex items-center gap-3">
+              <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-all">
+                Choose File
+                <input type="file" accept="image/*,.ico" onChange={handleFaviconChange} className="hidden" />
+              </label>
+              {faviconPreview && (
+                <button
+                  type="button"
+                  onClick={handleFaviconUpload}
+                  disabled={faviconUploading}
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-teal-800 hover:bg-teal-900 text-white text-xs font-bold rounded-xl transition-all disabled:opacity-60"
+                >
+                  {faviconUploading ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Uploading...</> : <><Save className="w-3.5 h-3.5" /> Save Favicon</>}
                 </button>
               )}
             </div>
@@ -443,6 +523,14 @@ export default function AdminDashboardPage() {
   const [tab, setTab] = useState('appointments');
   const [loggingOut, setLoggingOut] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarLogoVersion, setSidebarLogoVersion] = useState(1);
+
+  useEffect(() => {
+    fetch('/api/settings')
+      .then(r => r.json())
+      .then(d => { if (d.success && d.data.logoVersion) setSidebarLogoVersion(d.data.logoVersion); })
+      .catch(() => {});
+  }, []);
 
   const handleLogout = async () => {
     setLoggingOut(true);
@@ -464,7 +552,7 @@ export default function AdminDashboardPage() {
       {/* Logo */}
       <div className="p-6 border-b border-slate-200">
         <div className="flex items-center gap-3">
-          <Image src="/logo.png" alt="Anjum Dentist" width={44} height={44} className="w-11 h-11 object-contain drop-shadow" />
+          <img src={`/logo.png?v=${sidebarLogoVersion}`} alt="Anjum Dentist" className="w-11 h-11 object-contain drop-shadow" />
           <div>
             <p className="text-slate-900 font-black text-base leading-none tracking-tight">Anjum Dentist</p>
             <p className="text-teal-600 text-[9px] font-bold uppercase tracking-[0.2em] mt-1">Admin Panel</p>
