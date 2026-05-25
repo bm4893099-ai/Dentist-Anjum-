@@ -8,8 +8,13 @@ import {
   CheckCircle, Clock, LayoutDashboard, Loader2,
   Save, Phone, Mail, MapPin, AlertCircle, ChevronDown,
   Menu, X, TrendingUp, Calendar, Search, ExternalLink,
+  Stethoscope, FileText, UserCog, ScanLine,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import TreatmentsTab from '@/components/admin/TreatmentsTab';
+import PatientsTab from '@/components/admin/PatientsTab';
+import StaffUsersTab from '@/components/admin/StaffUsersTab';
+import AttendanceTab from '@/components/admin/AttendanceTab';
 
 const STATUS_STYLES = {
   Pending:   { dot: 'bg-amber-400',   text: 'text-amber-600',   bg: 'bg-amber-50   border-amber-200'  },
@@ -447,6 +452,10 @@ export default function AdminDashboardPage() {
 
   const navItems = [
     { id: 'appointments', label: 'Appointments', icon: Calendar },
+    { id: 'treatments', label: 'Treatments', icon: Stethoscope },
+    { id: 'patients', label: 'Patients & Invoices', icon: FileText },
+    { id: 'staff', label: 'Staff Users', icon: UserCog },
+    { id: 'attendance', label: 'Attendance', icon: ScanLine },
     { id: 'settings', label: 'Site Settings', icon: Settings },
   ];
 
@@ -472,7 +481,7 @@ export default function AdminDashboardPage() {
             onClick={() => { setTab(id); setSidebarOpen(false); }}
             className={`w-full flex items-center gap-3 px-3 py-3 rounded-2xl text-sm font-semibold transition-all duration-200 ${
               tab === id
-                ? 'bg-teal-600 text-white shadow-lg shadow-teal-600/20'
+                ? 'bg-teal-800 text-white shadow-lg shadow-teal-800/20'
                 : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'
             }`}
           >
@@ -527,10 +536,10 @@ export default function AdminDashboardPage() {
           </button>
           <div className="flex-1">
             <h1 className="text-slate-900 font-black tracking-tight capitalize">
-              {tab === 'appointments' ? 'Appointments' : 'Site Settings'}
+              {{ appointments: 'Appointments', treatments: 'Treatments', patients: 'Patients & Invoices', staff: 'Staff Users', attendance: 'Attendance', settings: 'Site Settings' }[tab]}
             </h1>
             <p className="text-slate-400 text-xs hidden sm:block">
-              {tab === 'appointments' ? 'View and manage all patient bookings' : 'Control your website content and contact details'}
+              {{ appointments: 'View and manage all patient bookings', treatments: 'Add and manage dental treatments with pricing', patients: 'Patient files and professional invoices', staff: 'Manage staff logins and access', attendance: 'QR-based daily attendance tracking', settings: 'Control website content and contact details' }[tab]}
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -547,6 +556,10 @@ export default function AdminDashboardPage() {
         {/* Page content */}
         <main className="flex-1 p-4 sm:p-6 lg:p-8">
           {tab === 'appointments' && <AppointmentsTab />}
+          {tab === 'treatments' && <TreatmentsTab />}
+          {tab === 'patients' && <PatientsTab />}
+          {tab === 'staff' && <StaffUsersTab />}
+          {tab === 'attendance' && <AttendanceTab />}
           {tab === 'settings' && <SettingsTab />}
         </main>
       </div>
