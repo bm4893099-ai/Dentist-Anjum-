@@ -9,13 +9,13 @@ const HEADERS = { 'Cache-Control': 'no-store, must-revalidate' };
 export async function GET() {
   try {
     await connectDB();
-    const settings = await Settings.findOne({}).select('logoData').lean();
+    const settings = await Settings.findOne({}).select('faviconData').lean();
 
-    if (settings?.logoData) {
-      const idx = settings.logoData.indexOf(',');
+    if (settings?.faviconData) {
+      const idx = settings.faviconData.indexOf(',');
       if (idx > -1) {
-        const meta = settings.logoData.substring(0, idx);
-        const b64 = settings.logoData.substring(idx + 1);
+        const meta = settings.faviconData.substring(0, idx);
+        const b64 = settings.faviconData.substring(idx + 1);
         const contentType = meta.replace('data:', '').replace(';base64', '');
         const buffer = Buffer.from(b64, 'base64');
         return new NextResponse(buffer, {
@@ -26,7 +26,7 @@ export async function GET() {
 
     const { readFile } = await import('fs/promises');
     const { join } = await import('path');
-    const buf = await readFile(join(process.cwd(), 'public', 'logo.png'));
+    const buf = await readFile(join(process.cwd(), 'public', 'favicon.png'));
     return new NextResponse(buf, {
       headers: { 'Content-Type': 'image/png', ...HEADERS },
     });

@@ -15,7 +15,6 @@ const navLinks = [
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [logoVersion, setLogoVersion] = useState(1);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -27,13 +26,6 @@ export default function Navbar() {
   useEffect(() => {
     setIsMobileOpen(false);
   }, [pathname]);
-
-  useEffect(() => {
-    fetch('/api/settings')
-      .then(r => r.json())
-      .then(d => { if (d.success && d.data.logoVersion) setLogoVersion(d.data.logoVersion); })
-      .catch(() => {});
-  }, []);
 
   return (
     <>
@@ -48,7 +40,7 @@ export default function Navbar() {
             <Link href="/" className="flex items-center group" aria-label="Anjum Dentist Home">
               <div className="relative flex-shrink-0 group-hover:scale-105 transition-transform duration-300">
                 <img
-                  src={`/api/logo?v=${logoVersion}`}
+                  src="/api/logo"
                   alt="Anjum Dentist Logo"
                   className="h-14 w-auto object-contain drop-shadow-sm"
                 />

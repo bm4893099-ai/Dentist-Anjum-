@@ -227,16 +227,16 @@ function AppointmentsTab() {
 }
 
 /* ── SETTINGS TAB ──────────────────────────── */
-function SettingsTab() {
+function SettingsTab({ onLogoUpdated, onFaviconUpdated }) {
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [logoPreview, setLogoPreview] = useState(null);
   const [logoUploading, setLogoUploading] = useState(false);
-  const [logoVersion, setLogoVersion] = useState(Date.now());
+  const [logoKey, setLogoKey] = useState(0);
   const [faviconPreview, setFaviconPreview] = useState(null);
   const [faviconUploading, setFaviconUploading] = useState(false);
-  const [faviconVersion, setFaviconVersion] = useState(Date.now());
+  const [faviconKey, setFaviconKey] = useState(0);
 
   useEffect(() => {
     fetch('/api/settings')
@@ -244,8 +244,6 @@ function SettingsTab() {
       .then((d) => {
         if (d.success) {
           setSettings(d.data);
-          if (d.data.logoVersion) setLogoVersion(d.data.logoVersion);
-          if (d.data.faviconVersion) setFaviconVersion(d.data.faviconVersion);
         }
       })
       .catch(() => toast.error('Failed to load settings.'))
@@ -276,8 +274,9 @@ function SettingsTab() {
       });
       const data = await res.json();
       if (data.success) {
-        setLogoVersion(data.logoVersion);
         setLogoPreview(null);
+        setLogoKey(k => k + 1);
+        onLogoUpdated?.();
         toast.success('Logo updated successfully!');
       } else throw new Error(data.error);
     } catch (err) {
@@ -306,8 +305,9 @@ function SettingsTab() {
       });
       const data = await res.json();
       if (data.success) {
-        setFaviconVersion(data.faviconVersion);
         setFaviconPreview(null);
+        setFaviconKey(k => k + 1);
+        onFaviconUpdated?.();
         toast.success('Favicon updated successfully!');
       } else throw new Error(data.error);
     } catch (err) {
@@ -399,7 +399,7 @@ function SettingsTab() {
       <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm mb-5">
         <div className="flex items-center gap-2.5 mb-5">
           <div className="w-8 h-8 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center overflow-hidden">
-            <img src={`/api/logo?v=${logoVersion}`} alt="logo" className="w-5 h-5 object-contain" />
+            <img key={logoKey} src="/api/logo" alt="logo" className="w-5 h-5 object-contain" />
           </div>
           <h3 className="text-slate-900 font-bold">Clinic Logo</h3>
           <span className="text-xs text-slate-400 bg-slate-100 px-2 py-0.5 rounded-lg">Appears on website &amp; admin panel</span>
@@ -408,7 +408,7 @@ function SettingsTab() {
           <div className="w-24 h-24 rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 flex items-center justify-center overflow-hidden flex-shrink-0">
             {logoPreview
               ? <img src={logoPreview} alt="preview" className="w-full h-full object-contain p-1" />
-              : <img src={`/api/logo?v=${logoVersion}`} alt="current" className="w-full h-full object-contain p-2" key={logoVersion} />}
+              : <img key={logoKey} src="/api/logo" alt="current" className="w-full h-full object-contain p-2" />}
           </div>
           <div className="flex-1">
             <p className="text-sm font-semibold text-slate-700 mb-1">Upload new logo</p>
@@ -437,7 +437,7 @@ function SettingsTab() {
       <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm mb-8">
         <div className="flex items-center gap-2.5 mb-5">
           <div className="w-8 h-8 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center overflow-hidden">
-            <img src={`/favicon.png?v=${faviconVersion}`} alt="favicon" className="w-5 h-5 object-contain" onError={e => { e.target.style.display='none'; }} />
+            <img key={faviconKey} src="/api/favicon-icon" alt="favicon" className="w-5 h-5 object-contain" onError={e => { e.target.style.display='none'; }} />
           </div>
           <h3 className="text-slate-900 font-bold">Favicon</h3>
           <span className="text-xs text-slate-400 bg-slate-100 px-2 py-0.5 rounded-lg">Browser tab icon</span>
@@ -446,7 +446,7 @@ function SettingsTab() {
           <div className="w-16 h-16 rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 flex items-center justify-center overflow-hidden flex-shrink-0">
             {faviconPreview
               ? <img src={faviconPreview} alt="preview" className="w-full h-full object-contain p-1" />
-              : <img src={`/favicon.png?v=${faviconVersion}`} alt="current" className="w-full h-full object-contain p-1" key={faviconVersion} onError={e => { e.target.style.display='none'; }} />}
+              : <img key={faviconKey} src="/api/favicon-icon" alt="current" className="w-full h-full object-contain p-1" onError={e => { e.target.style.display='none'; }} />}
           </div>
           <div className="flex-1">
             <p className="text-sm font-semibold text-slate-700 mb-1">Upload favicon</p>
@@ -523,14 +523,8 @@ export default function AdminDashboardPage() {
   const [tab, setTab] = useState('appointments');
   const [loggingOut, setLoggingOut] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [sidebarLogoVersion, setSidebarLogoVersion] = useState(1);
-
-  useEffect(() => {
-    fetch('/api/settings')
-      .then(r => r.json())
-      .then(d => { if (d.success && d.data.logoVersion) setSidebarLogoVersion(d.data.logoVersion); })
-      .catch(() => {});
-  }, []);
+  const [logoKey, setLogoKey] = useState(0);
+  const [faviconKey, setFaviconKey] = useState(0);
 
   const handleLogout = async () => {
     setLoggingOut(true);
@@ -552,7 +546,7 @@ export default function AdminDashboardPage() {
       {/* Logo */}
       <div className="p-6 border-b border-slate-200">
         <div className="flex items-center gap-3">
-          <img src={`/api/logo?v=${sidebarLogoVersion}`} alt="Anjum Dentist" className="w-11 h-11 object-contain drop-shadow" />
+          <img key={logoKey} src="/api/logo" alt="Anjum Dentist" className="w-11 h-11 object-contain drop-shadow" />
           <div>
             <p className="text-slate-900 font-black text-base leading-none tracking-tight">Anjum Dentist</p>
             <p className="text-teal-600 text-[9px] font-bold uppercase tracking-[0.2em] mt-1">Admin Panel</p>
@@ -648,7 +642,7 @@ export default function AdminDashboardPage() {
           {tab === 'patients' && <PatientsTab />}
           {tab === 'staff' && <StaffUsersTab />}
           {tab === 'attendance' && <AttendanceTab />}
-          {tab === 'settings' && <SettingsTab />}
+          {tab === 'settings' && <SettingsTab onLogoUpdated={() => setLogoKey(k => k + 1)} onFaviconUpdated={() => setFaviconKey(k => k + 1)} />}
         </main>
       </div>
     </div>
