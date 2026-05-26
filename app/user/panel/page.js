@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 import { LogOut, Loader2, Calendar, Clock, CheckCircle, ScanLine, QrCode } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { Toaster } from 'react-hot-toast';
@@ -78,7 +77,7 @@ export default function StaffPanelPage() {
       <header className="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-20">
         <div className="max-w-lg mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Image src="/logo.png" alt="Anjum Dentist" width={36} height={36} className="w-9 h-9 object-contain" />
+            <img src="/api/logo" alt="Anjum Dentist" className="w-9 h-9 object-contain" />
             <div>
               <p className="text-slate-900 font-black text-sm leading-none">Anjum Dentist</p>
               <p className="text-teal-800 text-[10px] font-bold uppercase tracking-widest mt-0.5">Staff Portal</p>

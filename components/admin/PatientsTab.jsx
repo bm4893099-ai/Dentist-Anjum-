@@ -281,7 +281,7 @@ export default function PatientsTab() {
               {/* Header */}
               <div className="flex items-start justify-between mb-8 pb-6 border-b-2 border-slate-900">
                 <div className="flex items-center gap-4">
-                  <img src="/logo.png" alt="Logo" style={{ width: 64, height: 64, objectFit: 'contain' }} />
+                  <img src="/api/logo" alt="Logo" style={{ width: 64, height: 64, objectFit: 'contain' }} />
                   <div>
                     <h1 className="text-2xl font-black text-slate-900">Anjum Dentist Clinic</h1>
                     <p className="text-slate-500 text-sm">{clinicSettings.address || 'Karachi, Pakistan'}</p>

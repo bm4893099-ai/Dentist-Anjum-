@@ -19,7 +19,7 @@ const DEFAULT_SETTINGS = {
 export async function GET() {
   try {
     await connectDB();
-    let settings = await Settings.findOne({});
+    let settings = await Settings.findOne({}).select('-logoData -faviconData');
 
     if (!settings) {
       settings = await Settings.create(DEFAULT_SETTINGS);

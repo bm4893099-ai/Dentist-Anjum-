@@ -48,7 +48,7 @@ export default function Navbar() {
             <Link href="/" className="flex items-center group" aria-label="Anjum Dentist Home">
               <div className="relative flex-shrink-0 group-hover:scale-105 transition-transform duration-300">
                 <img
-                  src={`/logo.png?v=${logoVersion}`}
+                  src={`/api/logo?v=${logoVersion}`}
                   alt="Anjum Dentist Logo"
                   className="h-14 w-auto object-contain drop-shadow-sm"
                 />

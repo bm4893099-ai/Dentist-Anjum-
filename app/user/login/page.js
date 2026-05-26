@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 import { Phone, Lock, Eye, EyeOff, Loader2, ShieldCheck, AlertCircle } from 'lucide-react';
 
 export default function StaffLoginPage() {
@@ -40,7 +39,7 @@ export default function StaffLoginPage() {
         {/* Logo */}
         <div className="flex flex-col items-center mb-10">
           <div className="bg-white border border-slate-200 rounded-3xl p-4 shadow-sm mb-4">
-            <Image src="/logo.png" alt="Anjum Dentist" width={56} height={56} className="w-14 h-14 object-contain" />
+            <img src="/api/logo" alt="Anjum Dentist" className="w-14 h-14 object-contain" />
           </div>
           <h1 className="text-slate-900 font-black text-2xl tracking-tight">Staff Portal</h1>
           <p className="text-slate-400 text-sm mt-1">Anjum Dentist Clinic</p>

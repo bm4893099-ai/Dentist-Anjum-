@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 import { User, Lock, Eye, EyeOff, Loader2, AlertCircle, ShieldCheck, Calendar, Users, Star } from 'lucide-react';
 
 export default function AdminLoginPage() {
@@ -58,7 +57,7 @@ export default function AdminLoginPage() {
         <div className="relative z-10">
           <div className="flex items-center gap-3 mb-16">
             <div className="bg-white/15 backdrop-blur-sm rounded-2xl p-2">
-              <Image src="/logo.png" alt="Anjum Dentist" width={44} height={44} className="w-11 h-11 object-contain" />
+              <img src="/api/logo" alt="Anjum Dentist" className="w-11 h-11 object-contain" />
             </div>
             <div>
               <p className="text-white font-black text-lg leading-none tracking-tight">Anjum Dentist</p>
@@ -98,7 +97,7 @@ export default function AdminLoginPage() {
         <div className="relative w-full max-w-[420px]">
           {/* Mobile-only logo */}
           <div className="flex lg:hidden items-center justify-center gap-3 mb-10">
-            <Image src="/logo.png" alt="Anjum Dentist" width={48} height={48} className="w-12 h-12 object-contain" />
+            <img src="/api/logo" alt="Anjum Dentist" className="w-12 h-12 object-contain" />
             <div>
               <p className="text-slate-900 font-black text-xl tracking-tight">Anjum Dentist</p>
               <p className="text-teal-600 text-[10px] font-bold uppercase tracking-widest">Admin Portal</p>

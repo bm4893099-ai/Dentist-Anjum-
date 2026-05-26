@@ -399,7 +399,7 @@ function SettingsTab() {
       <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm mb-5">
         <div className="flex items-center gap-2.5 mb-5">
           <div className="w-8 h-8 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-center overflow-hidden">
-            <img src={`/logo.png?v=${logoVersion}`} alt="logo" className="w-5 h-5 object-contain" />
+            <img src={`/api/logo?v=${logoVersion}`} alt="logo" className="w-5 h-5 object-contain" />
           </div>
           <h3 className="text-slate-900 font-bold">Clinic Logo</h3>
           <span className="text-xs text-slate-400 bg-slate-100 px-2 py-0.5 rounded-lg">Appears on website &amp; admin panel</span>
@@ -408,7 +408,7 @@ function SettingsTab() {
           <div className="w-24 h-24 rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 flex items-center justify-center overflow-hidden flex-shrink-0">
             {logoPreview
               ? <img src={logoPreview} alt="preview" className="w-full h-full object-contain p-1" />
-              : <img src={`/logo.png?v=${logoVersion}`} alt="current" className="w-full h-full object-contain p-2" key={logoVersion} />}
+              : <img src={`/api/logo?v=${logoVersion}`} alt="current" className="w-full h-full object-contain p-2" key={logoVersion} />}
           </div>
           <div className="flex-1">
             <p className="text-sm font-semibold text-slate-700 mb-1">Upload new logo</p>
@@ -552,7 +552,7 @@ export default function AdminDashboardPage() {
       {/* Logo */}
       <div className="p-6 border-b border-slate-200">
         <div className="flex items-center gap-3">
-          <img src={`/logo.png?v=${sidebarLogoVersion}`} alt="Anjum Dentist" className="w-11 h-11 object-contain drop-shadow" />
+          <img src={`/api/logo?v=${sidebarLogoVersion}`} alt="Anjum Dentist" className="w-11 h-11 object-contain drop-shadow" />
           <div>
             <p className="text-slate-900 font-black text-base leading-none tracking-tight">Anjum Dentist</p>
             <p className="text-teal-600 text-[9px] font-bold uppercase tracking-[0.2em] mt-1">Admin Panel</p>
