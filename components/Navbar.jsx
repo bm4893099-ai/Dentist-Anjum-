@@ -35,14 +35,14 @@ export default function Navbar() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
+          <div className="flex items-center justify-between h-28">
             {/* Logo */}
             <Link href="/" className="flex items-center group" aria-label="Anjum Dentist Home">
               <div className="relative flex-shrink-0 group-hover:scale-105 transition-transform duration-300">
                 <img
                   src="/api/logo"
                   alt="Anjum Dentist Logo"
-                  className="h-14 w-auto object-contain drop-shadow-sm"
+                  className="h-24 w-auto object-contain drop-shadow-sm"
                 />
               </div>
             </Link>

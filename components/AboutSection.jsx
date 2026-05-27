@@ -34,7 +34,7 @@ export default function AboutSection() {
                 <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-teal-500/30" />
                 <div className="absolute -bottom-6 -left-6 w-24 h-24 rounded-full bg-teal-700/30" />
                 <div className="relative inline-block mb-4 hover:scale-105 transition-transform duration-300">
-                  <img src="/api/logo" alt="Anjum Dentist" className="w-22 h-22 object-contain drop-shadow-lg" />
+                  <img src="/api/logo" alt="Anjum Dentist" className="w-28 h-28 object-contain drop-shadow-lg" />
                 </div>
                 <h3 className="text-white font-black text-2xl tracking-tight">Anjum Dentist</h3>
                 <p className="text-teal-200 text-sm font-medium mt-1">Est. 2009 · Clifton, Karachi</p>

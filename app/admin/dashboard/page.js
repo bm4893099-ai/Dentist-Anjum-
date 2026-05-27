@@ -546,7 +546,7 @@ export default function AdminDashboardPage() {
       {/* Logo */}
       <div className="p-6 border-b border-slate-200">
         <div className="flex items-center gap-3">
-          <img key={logoKey} src="/api/logo" alt="Anjum Dentist" className="w-11 h-11 object-contain drop-shadow" />
+          <img key={logoKey} src="/api/logo" alt="Anjum Dentist" className="w-20 h-20 object-contain drop-shadow" />
           <div>
             <p className="text-slate-900 font-black text-base leading-none tracking-tight">Anjum Dentist</p>
             <p className="text-teal-600 text-[9px] font-bold uppercase tracking-[0.2em] mt-1">Admin Panel</p>

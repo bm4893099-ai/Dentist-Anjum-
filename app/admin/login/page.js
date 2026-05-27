@@ -55,14 +55,12 @@ export default function AdminLoginPage() {
 
         {/* Top: logo + brand */}
         <div className="relative z-10">
-          <div className="flex items-center gap-3 mb-16">
-            <div className="bg-white/15 backdrop-blur-sm rounded-2xl p-2">
-              <img src="/api/logo" alt="Anjum Dentist" className="w-11 h-11 object-contain" />
+          <div className="mb-12">
+            <div className="bg-white rounded-3xl p-5 shadow-2xl shadow-black/20 inline-flex items-center justify-center mb-5">
+              <img src="/api/logo" alt="Anjum Dentist" className="w-24 h-24 object-contain" />
             </div>
-            <div>
-              <p className="text-white font-black text-lg leading-none tracking-tight">Anjum Dentist</p>
-              <p className="text-teal-200 text-[10px] font-bold uppercase tracking-[0.2em] mt-1">Admin Portal</p>
-            </div>
+            <p className="text-white font-black text-3xl leading-tight tracking-tight">Anjum Dentist</p>
+            <p className="text-teal-200 text-sm font-bold uppercase tracking-[0.25em] mt-2">Admin Portal</p>
           </div>
           <h1 className="text-5xl font-black text-white leading-[1.1] tracking-tight mb-5">
             Manage your<br />
@@ -96,8 +94,10 @@ export default function AdminLoginPage() {
 
         <div className="relative w-full max-w-[420px]">
           {/* Mobile-only logo */}
-          <div className="flex lg:hidden items-center justify-center gap-3 mb-10">
-            <img src="/api/logo" alt="Anjum Dentist" className="w-12 h-12 object-contain" />
+          <div className="flex lg:hidden items-center justify-center gap-4 mb-10">
+            <div className="bg-white rounded-2xl p-3 shadow-lg shadow-teal-200/40">
+              <img src="/api/logo" alt="Anjum Dentist" className="w-16 h-16 object-contain" />
+            </div>
             <div>
               <p className="text-slate-900 font-black text-xl tracking-tight">Anjum Dentist</p>
               <p className="text-teal-600 text-[10px] font-bold uppercase tracking-widest">Admin Portal</p>

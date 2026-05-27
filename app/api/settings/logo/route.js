@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import sharp from 'sharp';
 import connectDB from '@/lib/mongodb';
 import Settings from '@/lib/models/Settings';
 
@@ -12,11 +13,21 @@ export async function POST(request) {
       return NextResponse.json({ success: false, error: 'No image data provided.' }, { status: 400 });
     }
 
+    const idx = base64.indexOf(',');
+    const b64 = idx > -1 ? base64.substring(idx + 1) : base64;
+    const inputBuffer = Buffer.from(b64, 'base64');
+
+    const webpBuffer = await sharp(inputBuffer)
+      .webp({ quality: 90 })
+      .toBuffer();
+
+    const logoData = `data:image/webp;base64,${webpBuffer.toString('base64')}`;
     const newVersion = Date.now();
+
     await connectDB();
     await Settings.findOneAndUpdate(
       {},
-      { logoData: base64, logoVersion: newVersion },
+      { logoData, logoVersion: newVersion },
       { upsert: true, new: true }
     );
 
